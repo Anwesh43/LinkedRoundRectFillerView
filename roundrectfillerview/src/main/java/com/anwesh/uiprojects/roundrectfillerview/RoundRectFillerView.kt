@@ -100,4 +100,49 @@ class RoundRectFillerView (ctx : Context) : View(ctx) {
             }
         }
     }
+
+    data class RRFNode(var i : Int, val state : State = State()) {
+
+        private var next : RRFNode? = null
+
+        private var prev : RRFNode? = null
+
+        fun update(stopcb : (Int, Float) -> Unit) {
+            state.update {
+                stopcb(i, it)
+            }
+        }
+
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : RRFNode {
+            var curr : RRFNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
+        }
+
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = RRFNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawRRFNode(i, state.scale, paint)
+            next?.draw(canvas, paint)
+        }
+    }
 }
