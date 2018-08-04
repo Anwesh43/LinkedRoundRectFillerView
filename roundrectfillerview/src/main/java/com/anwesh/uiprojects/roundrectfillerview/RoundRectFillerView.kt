@@ -169,4 +169,27 @@ class RoundRectFillerView (ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : RoundRectFillerView) {
+
+        private val lrrf : LinkedRRF = LinkedRRF(0)
+
+        private val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            lrrf.draw(canvas, paint)
+            animator.animate {
+                lrrf.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            lrrf.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
