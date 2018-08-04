@@ -9,8 +9,32 @@ import android.view.MotionEvent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.content.Context
+import android.graphics.Color
+import android.graphics.RectF
 
 val nodes : Int = 5
+val speed : Float = 0.05f
+
+fun Canvas.drawRRFNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w / nodes
+    val size : Float = gap/2
+    val sc1 : Float = Math.min(0.5f, scale) * 2
+    val sc2 : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f)) * 2
+    paint.color = Color.parseColor("#2E7D32")
+    paint.strokeWidth = Math.min(w, h) / 60
+    paint.strokeCap = Paint.Cap.ROUND
+    save()
+    translate(gap * i + gap / 2 + gap * sc2, h / 2)
+    paint.style = Paint.Style.STROKE
+    drawRoundRect(RectF(-size/2, -size/2, size/2, size/2), size/5, size/5, paint)
+    paint.style = Paint.Style.FILL
+    val fillSize : Float = size * (1 - sc1)
+    drawRoundRect(RectF(-fillSize/2, -fillSize/2, fillSize/2, fillSize/2), fillSize/5, fillSize/5, paint)
+    restore()
+}
+
 
 class RoundRectFillerView (ctx : Context) : View(ctx) {
 
@@ -32,7 +56,7 @@ class RoundRectFillerView (ctx : Context) : View(ctx) {
     data class State(var scale : Float = 0f, var dir : Float = 0f, var prevScale : Float = 0f) {
 
         fun update(cb  : (Float) -> Unit) {
-            scale += 0.1f * dir
+            scale += speed * dir
             if (Math.abs(scale - prevScale) > 1) {
                 scale = prevScale + dir
                 dir = 0f
