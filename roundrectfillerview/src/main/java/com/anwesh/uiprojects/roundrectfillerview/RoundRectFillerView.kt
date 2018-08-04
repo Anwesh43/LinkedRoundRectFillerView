@@ -203,7 +203,7 @@ class RoundRectFillerView (ctx : Context) : View(ctx) {
             val view : RoundRectFillerView = RoundRectFillerView(activity)
             activity.setContentView(view)
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            return view 
+            return view
         }
     }
 }
