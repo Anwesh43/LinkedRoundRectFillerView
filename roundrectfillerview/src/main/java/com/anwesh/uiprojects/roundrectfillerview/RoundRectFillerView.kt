@@ -4,11 +4,13 @@ package com.anwesh.uiprojects.roundrectfillerview
  * Created by anweshmishra on 04/08/18.
  */
 
+import android.app.Activity
 import android.view.View
 import android.view.MotionEvent
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.graphics.RectF
 
@@ -192,6 +194,16 @@ class RoundRectFillerView (ctx : Context) : View(ctx) {
             lrrf.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+
+        fun create(activity : Activity) : RoundRectFillerView {
+            val view : RoundRectFillerView = RoundRectFillerView(activity)
+            activity.setContentView(view)
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            return view 
         }
     }
 }
